@@ -2,6 +2,7 @@
 
 ```javascript
 
+
 var IndexDBHelper = require('js/IndexDBHelper.js');
 dbHelper = new IndexDBHelper(); 
  
