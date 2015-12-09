@@ -195,15 +195,15 @@ define(function (require, exports, module) {
 						var data = cursor.value;
 						// var jsonStr = JSON.stringify(employee);
 						if (whereObj) {
-							for (var _key in whereObj) {
-								var value = data[_key];
+							for (var key in whereObj) {
+								var value = data[key];
 								//是否模糊查询
 								if (isFuzzy) {
-									if (value.indexOf(whereObj[_key]) != -1) {
+									if (value.indexOf(whereObj[key]) != -1) {
 										result.push(data);
 									};
 								} else {
-									if (whereObj[_key] == value) {
+									if (whereObj[key] == value) {
 										result.push(data);
 									};
 								}
@@ -378,47 +378,51 @@ define(function (require, exports, module) {
   * @return {[type]} [description]
   */
 	dbHelper.prototype.updateById = function (storeName, id, setObj, callback) {
+		var _this2 = this;
+
 		try {
-			var _me6 = this;
-			var transaction = _me6.localDatabase.db.transaction(storeName, "readwrite");
-			var store = transaction.objectStore(storeName);
-			var record;
+			(function () {
+				var me = _this2;
+				var transaction = me.localDatabase.db.transaction(storeName, "readwrite");
+				var store = transaction.objectStore(storeName);
+				var record = undefined;
 
-			if (_me6.localDatabase != null && _me6.localDatabase.db != null) {
+				if (me.localDatabase != null && me.localDatabase.db != null) {
 
-				store.get(id).onsuccess = function (e) {
-					record = e.target.result;
+					store.get(id).onsuccess = function (e) {
+						record = e.target.result;
 
-					for (key in setObj) {
-						if (record[key]) {
-							record[key] = setObj[key];
+						for (var key in setObj) {
+							if (record[key]) {
+								record[key] = setObj[key];
+							};
+						}
+						var request = store.put(record);
+
+						request.onsuccess = function (e) {
+							if (callback) {
+								var result = [];
+								result.push(record);
+								callback(new message({
+									success: true,
+									msg: storeName + " store  " + JSON.stringify(record) + "  update",
+									result: result
+								}));
+							}
 						};
-					}
-					var request = store.put(record);
 
-					request.onsuccess = function (e) {
-						if (callback) {
-							var result = [];
-							result.push(record);
-							callback(new message({
-								success: true,
-								msg: storeName + " store  " + JSON.stringify(record) + "  update",
-								result: result
-							}));
-						}
-					};
-
-					request.onerror = function (e) {
-						if (callback) {
-							callback(new message({
-								success: false,
-								msg: e,
-								result: null
-							}));
-						}
-					};
-				}; // fetch   first time
-			}
+						request.onerror = function (e) {
+							if (callback) {
+								callback(new message({
+									success: false,
+									msg: e,
+									result: null
+								}));
+							}
+						};
+					}; // fetch   first time
+				}
+			})();
 		} catch (e) {
 			if (callback) {
 				callback(new message({
