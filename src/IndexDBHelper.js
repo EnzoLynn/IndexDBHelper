@@ -60,7 +60,7 @@ define(function(require, exports, module) {
 				// };
 			};
 			openRequest.onupgradeneeded = function(e) {
-				alert('open upgrade');
+				//alert('open upgrade');
 
 				me.localDatabase.db = e.target.result;
 				me.createObjectStore(storeName, false, false, function() {
@@ -251,7 +251,7 @@ define(function(require, exports, module) {
 			let store = transaction.objectStore(storeName);
 
 			if (me.localDatabase != null && me.localDatabase.db != null) {
-				store.get(id).onsuccess = function(e) {
+				store.get(id).onsuccess = function(e) { 
 					if (callback) {
 						callback(new message({
 							success: true,
@@ -275,11 +275,11 @@ define(function(require, exports, module) {
 	/**
 	 * 新增
 	 */
-	dbHelper.prototype.add = function(storeName, fieldArr, callback) {
+	dbHelper.prototype.add = function(storeName, fieldArr, callback) { 
 		try {
-			let me = this;
-			let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
-			let store = transaction.objectStore(storeName);
+			let me = this; 
+			let transaction = me.localDatabase.db.transaction(storeName, "readwrite"); 
+			let store = transaction.objectStore(storeName); 
 			if (me.localDatabase != null && me.localDatabase.db != null) {
 				for (let i = 0; i < fieldArr.length; i++) {
 					let obj = fieldArr[i];
@@ -391,21 +391,20 @@ define(function(require, exports, module) {
 			let me = this;
 			let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
 			let store = transaction.objectStore(storeName);
-			let record;
 
-			if (me.localDatabase != null && me.localDatabase.db != null) {
-
+			let record; 
+			if (me.localDatabase != null && me.localDatabase.db != null) {  
 				store.get(id).onsuccess = function(e) {
-					record = e.target.result;
-
-					for (let key in setObj) {
-						if (record[key]) {
-							record[key] = setObj[key];
+					record = e.target.result;  
+					for (let key in setObj) { 
+						if (record[key] || record[key] == "") { 
+							record[key] = setObj[key]; 
 						};
 					}
+ 
 					let request = store.put(record);
 
-					request.onsuccess = function(e) {
+					request.onsuccess = function(es) {
 						if (callback) {
 							let result = [];
 							result.push(record);
@@ -417,11 +416,11 @@ define(function(require, exports, module) {
 						}
 					};
 
-					request.onerror = function(e) {
+					request.onerror = function(er) {
 						if (callback) {
 							callback(new message({
 								success: false,
-								msg: e,
+								msg: er,
 								result: null
 							}));
 						}

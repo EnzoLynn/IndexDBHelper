@@ -63,7 +63,7 @@ define(function (require, exports, module) {
 				// };
 			};
 			openRequest.onupgradeneeded = function (e) {
-				alert('open upgrade');
+				//alert('open upgrade');
 
 				me.localDatabase.db = e.target.result;
 				me.createObjectStore(storeName, false, false, function () {
@@ -385,21 +385,20 @@ define(function (require, exports, module) {
 				var me = _this2;
 				var transaction = me.localDatabase.db.transaction(storeName, "readwrite");
 				var store = transaction.objectStore(storeName);
+
 				var record = undefined;
-
 				if (me.localDatabase != null && me.localDatabase.db != null) {
-
 					store.get(id).onsuccess = function (e) {
 						record = e.target.result;
-
 						for (var key in setObj) {
-							if (record[key]) {
+							if (record[key] || record[key] == "") {
 								record[key] = setObj[key];
 							};
 						}
+
 						var request = store.put(record);
 
-						request.onsuccess = function (e) {
+						request.onsuccess = function (es) {
 							if (callback) {
 								var result = [];
 								result.push(record);
@@ -411,11 +410,11 @@ define(function (require, exports, module) {
 							}
 						};
 
-						request.onerror = function (e) {
+						request.onerror = function (er) {
 							if (callback) {
 								callback(new message({
 									success: false,
-									msg: e,
+									msg: er,
 									result: null
 								}));
 							}
