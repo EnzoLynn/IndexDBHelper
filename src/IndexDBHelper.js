@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
 	var merge = require('js/lib/merge.js');
 	let message = function({
-		success, msg, result
+		success, msg, result, total
 	}) {
 		return {
-			success, msg, result
+			success, msg, result, total
 		};
 	};
 	var dbHelper = function() {
@@ -177,46 +177,106 @@ define(function(require, exports, module) {
 	 * 查找
 	 * @return {[type]} [description]
 	 */
-	dbHelper.prototype.find = function(storeName, whereObj, isFuzzy, callback) {
+	dbHelper.prototype.find = function(storeName, whereObj, isFuzzy, topNum, callback) {
+		if (typeof whereObj === 'function') {
+			callback = whereObj;
+			whereObj = null;
+			isFuzzy = null;
+			topNum = null;
+		} else if (typeof isFuzzy === 'function') {
+			callback = isFuzzy;
+			isFuzzy = null;
+			topNum = null;
+		} else if (typeof topNum === 'function') {
+			callback = topNum;
+			topNum = null;
+		}
 		try {
 
 			let me = this;
 			let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
 			let store = transaction.objectStore(storeName);
-
+		 
 			if (me.localDatabase != null && me.localDatabase.db != null) {
 				var store = me.localDatabase.db.transaction(storeName).objectStore(storeName);
+
 				var request = store.openCursor();
-				var result = [];
+				var result = [],
+					res = [];
 				request.onsuccess = function(e) {
 					var cursor = e.target.result;
-					 
+					
 					if (cursor) {
-						var data = cursor.value;
-						// var jsonStr = JSON.stringify(employee);
-						if (whereObj) {
-							for (let key in whereObj) {
-								var value = data[key];
-								//是否模糊查询
-								if (isFuzzy) {
-									if (value.indexOf(whereObj[key]) != -1) {
-										result.push(data);
-									};
-								} else {
-									if (whereObj[key] == value) {
-										result.push(data);
-									};
-								}
-
-							}
-						} else {
-							result.push(data);
-						}
+						var data = cursor.value; 
+						result.push(data); 
 						cursor.continue();
 					} else {
-						if (callback) {
+						// var jsonStr = JSON.stringify(employee);
+						//var indexes = [];
+						if (whereObj) {
+							for (var i = 0; i < result.length; i++) {
+								for (let key in whereObj) {
+
+									let value = result[i][key];
+									//判断whereObj[key]是否默认类型
+									if (typeof whereObj[key] == 'object') {
+										var obj = whereObj[key];
+										if (obj.type == 'date') {
+											var val1 = new Date(obj.value);
+											var val2 = new Date(value);
+
+											if (!(val2 >= val1)) {
+												delete result[i];
+												break;
+											}
+										} else { //默认string 
+											//是否模糊查询
+											if (isFuzzy) {
+												if (value.indexOf(whereObj[key]) == -1) {
+													delete result[i];
+													break;
+												};
+											} else {
+												if (whereObj[key] != value) {
+													delete result[i];
+													break;
+												};
+											}
+										}
+
+									} else {
+										//是否模糊查询
+										if (isFuzzy) {
+											if (value.indexOf(whereObj[key]) == -1) {
+												delete result[i];
+												break;
+											};
+										} else {
+											if (whereObj[key] != value) {
+												delete result[i];
+												break;
+											};
+										}
+									}
+
+								}
+							};
+
+						}
+						for (let i = 0; i < result.length; i++) {
+							if (result[i]) {
+								res.push(result[i]);
+							};
+						};
+						if (topNum) {
+							if (res.length > topNum) {
+								res.splice(topNum - 1, res.length - topNum);
+							};
+						};
+						if (callback) {  
 							callback(new message({
 								success: true,
+								total: result.length,
 								msg: 'find success',
 								result: result
 							}));
@@ -251,7 +311,7 @@ define(function(require, exports, module) {
 			let store = transaction.objectStore(storeName);
 
 			if (me.localDatabase != null && me.localDatabase.db != null) {
-				store.get(id).onsuccess = function(e) { 
+				store.get(id).onsuccess = function(e) {
 					if (callback) {
 						callback(new message({
 							success: true,
@@ -275,11 +335,11 @@ define(function(require, exports, module) {
 	/**
 	 * 新增
 	 */
-	dbHelper.prototype.add = function(storeName, fieldArr, callback) { 
+	dbHelper.prototype.add = function(storeName, fieldArr, callback) {
 		try {
-			let me = this; 
-			let transaction = me.localDatabase.db.transaction(storeName, "readwrite"); 
-			let store = transaction.objectStore(storeName); 
+			let me = this;
+			let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
+			let store = transaction.objectStore(storeName);
 			if (me.localDatabase != null && me.localDatabase.db != null) {
 				for (let i = 0; i < fieldArr.length; i++) {
 					let obj = fieldArr[i];
@@ -392,16 +452,16 @@ define(function(require, exports, module) {
 			let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
 			let store = transaction.objectStore(storeName);
 
-			let record; 
-			if (me.localDatabase != null && me.localDatabase.db != null) {  
+			let record;
+			if (me.localDatabase != null && me.localDatabase.db != null) {
 				store.get(id).onsuccess = function(e) {
-					record = e.target.result;  
-					for (let key in setObj) { 
-						if (record[key] || record[key] == "") { 
-							record[key] = setObj[key]; 
+					record = e.target.result;
+					for (let key in setObj) {
+						if (record[key] || record[key] == "") {
+							record[key] = setObj[key];
 						};
 					}
- 
+
 					let request = store.put(record);
 
 					request.onsuccess = function(es) {

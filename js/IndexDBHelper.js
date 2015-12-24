@@ -6,9 +6,10 @@ define(function (require, exports, module) {
 		var success = _ref.success;
 		var msg = _ref.msg;
 		var result = _ref.result;
+		var total = _ref.total;
 
 		return {
-			success: success, msg: msg, result: result
+			success: success, msg: msg, result: result, total: total
 		};
 	};
 	var dbHelper = function dbHelper() {
@@ -177,7 +178,20 @@ define(function (require, exports, module) {
   * 查找
   * @return {[type]} [description]
   */
-	dbHelper.prototype.find = function (storeName, whereObj, isFuzzy, callback) {
+	dbHelper.prototype.find = function (storeName, whereObj, isFuzzy, topNum, callback) {
+		if (typeof whereObj === 'function') {
+			callback = whereObj;
+			whereObj = null;
+			isFuzzy = null;
+			topNum = null;
+		} else if (typeof isFuzzy === 'function') {
+			callback = isFuzzy;
+			isFuzzy = null;
+			topNum = null;
+		} else if (typeof topNum === 'function') {
+			callback = topNum;
+			topNum = null;
+		}
 		try {
 
 			var _me2 = this;
@@ -186,36 +200,82 @@ define(function (require, exports, module) {
 
 			if (_me2.localDatabase != null && _me2.localDatabase.db != null) {
 				var store = _me2.localDatabase.db.transaction(storeName).objectStore(storeName);
+
 				var request = _store.openCursor();
-				var result = [];
+				var result = [],
+				    res = [];
 				request.onsuccess = function (e) {
 					var cursor = e.target.result;
 
 					if (cursor) {
 						var data = cursor.value;
-						// var jsonStr = JSON.stringify(employee);
-						if (whereObj) {
-							for (var key in whereObj) {
-								var value = data[key];
-								//是否模糊查询
-								if (isFuzzy) {
-									if (value.indexOf(whereObj[key]) != -1) {
-										result.push(data);
-									};
-								} else {
-									if (whereObj[key] == value) {
-										result.push(data);
-									};
-								}
-							}
-						} else {
-							result.push(data);
-						}
+						result.push(data);
 						cursor["continue"]();
 					} else {
+						// var jsonStr = JSON.stringify(employee);
+						//var indexes = [];
+						if (whereObj) {
+							for (var i = 0; i < result.length; i++) {
+								for (var key in whereObj) {
+
+									var value = result[i][key];
+									//判断whereObj[key]是否默认类型
+									if (typeof whereObj[key] == 'object') {
+										var obj = whereObj[key];
+										if (obj.type == 'date') {
+											var val1 = new Date(obj.value);
+											var val2 = new Date(value);
+
+											if (!(val2 >= val1)) {
+												delete result[i];
+												break;
+											}
+										} else {
+											//默认string
+											//是否模糊查询
+											if (isFuzzy) {
+												if (value.indexOf(whereObj[key]) == -1) {
+													delete result[i];
+													break;
+												};
+											} else {
+												if (whereObj[key] != value) {
+													delete result[i];
+													break;
+												};
+											}
+										}
+									} else {
+										//是否模糊查询
+										if (isFuzzy) {
+											if (value.indexOf(whereObj[key]) == -1) {
+												delete result[i];
+												break;
+											};
+										} else {
+											if (whereObj[key] != value) {
+												delete result[i];
+												break;
+											};
+										}
+									}
+								}
+							};
+						}
+						for (var _i = 0; _i < result.length; _i++) {
+							if (result[_i]) {
+								res.push(result[_i]);
+							};
+						};
+						if (topNum) {
+							if (res.length > topNum) {
+								res.splice(topNum - 1, res.length - topNum);
+							};
+						};
 						if (callback) {
 							callback(new message({
 								success: true,
+								total: result.length,
 								msg: 'find success',
 								result: result
 							}));
