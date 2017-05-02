@@ -7,7 +7,7 @@
     "name": "EnzoLynn",
     "email": "6710582@qq.com"
   },
-  "main": "src/IndexDBHelper.js",
+  "main": "dist/IndexDBHelper.js",
   "dependencies": { 
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",

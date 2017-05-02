@@ -1,5 +1,5 @@
  
-import merge from 'merge' 
+import merge from './merge' 
  var Message = function({
  	success,
  	msg,
