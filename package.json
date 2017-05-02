@@ -2,13 +2,39 @@
   "name": "IndexDBHelper",
   "version": "1.0.0",
   "private": false,
-  "description": "SlpMPlus (redux)",
+  "description": "IndexDBHelper",
   "author": {
     "name": "EnzoLynn",
     "email": "6710582@qq.com"
   },
   "main": "dist/IndexDBHelper.js",
-  "dependencies": {
-  	"merge": "^1.2.0",
+  "dependencies": { 
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0", 
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.25.0",
+    "deep-assign": "^2.0.0",
+    "exports-loader": "^0.6.3",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0", 
+    "imports-loader": "^0.6.5" ,
+    "less-loader": "^2.2.3",
+    "merge": "^1.2.0",  
+    "redux": "^3.6.0", 
+    "resolve-url-loader": "^1.6.0",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.2" 
+  },
+  "devDependencies": {
+    "exports-loader": "^0.6.3",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "imports-loader": "^0.6.5",  
+    "less-loader": "^2.2.3",
+    "url-loader": "^0.5.7"
   }
 }
