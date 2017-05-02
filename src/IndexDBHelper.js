@@ -506,5 +506,5 @@ import merge from 'merge'
  };
 
 
- export {Message,DbHelper}
+ export {DbHelper as DbHelper}
  export default DbHelper
