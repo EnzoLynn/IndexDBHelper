@@ -1,6 +1,6 @@
  
 import merge from 'merge' 
- var message = function({
+ var Message = function({
  	success,
  	msg,
  	result,
@@ -13,9 +13,8 @@ import merge from 'merge'
  		total
  	};
  };
- alert(11)
- function dbHelper() {
- alert(22)
+ 
+ function DbHelper() { 
  	this.localDatabase = {};
  	this.localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
  	this.localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
@@ -29,7 +28,7 @@ import merge from 'merge'
   * 创建/打开数据库 和表
   * @return {[type]} [description]
   */
- dbHelper.prototype.openDatabase = function(dbName, storeName, version, callback) {
+ DbHelper.prototype.openDatabase = function(dbName, storeName, version, callback) {
  	let me = this,
  		vs = 1;
  	try {
@@ -40,7 +39,7 @@ import merge from 'merge'
  		let openRequest = me.localDatabase.indexedDB.open(dbName, vs);
  		openRequest.onerror = function(e) {
  			if (callback) {
- 				callback(new message({
+ 				callback(new Message({
  					success: false,
  					msg: "Database error: " + e.target.errorCode,
  					result: null
@@ -51,7 +50,7 @@ import merge from 'merge'
  			me.localDatabase.db = e.target.result;
  			//me.createObjectStore(storeName, false, false, function() {
  			if (callback) {
- 				callback(new message({
+ 				callback(new Message({
  					success: true,
  					msg: "createObjectStore success",
  					result: null
@@ -59,7 +58,7 @@ import merge from 'merge'
  			};
  			//});
  			// if (callback) {
- 			// 	callback(new message({
+ 			// 	callback(new Message({
  			// 		success: true,
  			// 		msg: "openDatabase success",
  			// 		result: null
@@ -72,7 +71,7 @@ import merge from 'merge'
  			me.localDatabase.db = e.target.result;
  			me.createObjectStore(storeName, false, false, function() {
  				if (callback) {
- 					callback(new message({
+ 					callback(new Message({
  						success: true,
  						msg: "upgradeneeded success",
  						result: null
@@ -84,7 +83,7 @@ import merge from 'merge'
  		};
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -100,13 +99,13 @@ import merge from 'merge'
   * @param  {[type]} dbName [description]
   * @return {[type]}        [description]
   */
- dbHelper.prototype.distoryDatabase = function(dbName, callback) {
+ DbHelper.prototype.distoryDatabase = function(dbName, callback) {
  	try {
  		let me = this;
  		let deleteDbRequest = me.localDatabase.indexedDB.deleteDatabase(dbName);
  		deleteDbRequest.onsuccess = function(e) {
  			if (callback) {
- 				callback(new message({
+ 				callback(new Message({
  					success: true,
  					msg: 'Database deleted',
  					result: null
@@ -115,7 +114,7 @@ import merge from 'merge'
 
  			deleteDbRequest.onerror = function(e) {
  				if (callback) {
- 					callback(new message({
+ 					callback(new Message({
  						success: false,
  						msg: "Database error: " + e.target.errorCode,
  						result: null
@@ -125,7 +124,7 @@ import merge from 'merge'
  		};
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -139,7 +138,7 @@ import merge from 'merge'
   * @param  {[type]} version [description]
   * @return {[type]}         [description]
   */
- dbHelper.prototype.createObjectStore = function(storeName, keyPath, valIndex, callback) {
+ DbHelper.prototype.createObjectStore = function(storeName, keyPath, valIndex, callback) {
  	try {
  		let me = this;
  		let def = {
@@ -159,7 +158,7 @@ import merge from 'merge'
 
  		employeeStore.onsuccess = function(e) {
  			if (callback) {
- 				callback(new message({
+ 				callback(new Message({
  					success: true,
  					msg: 'ok',
  					result: null
@@ -169,7 +168,7 @@ import merge from 'merge'
 
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -184,7 +183,7 @@ import merge from 'merge'
   * 查找
   * @return {[type]} [description]
   */
- dbHelper.prototype.find = function(storeName, whereObj, isFuzzy, topNum, callback) {
+ DbHelper.prototype.find = function(storeName, whereObj, isFuzzy, topNum, callback) {
  	if (typeof whereObj === 'function') {
  		callback = whereObj;
  		whereObj = null;
@@ -281,7 +280,7 @@ import merge from 'merge'
  						};
  					};
  					if (callback) {
- 						callback(new message({
+ 						callback(new Message({
  							success: true,
  							total: result.length,
  							msg: 'find success',
@@ -295,7 +294,7 @@ import merge from 'merge'
 
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -310,7 +309,7 @@ import merge from 'merge'
   * @param  {Function} callback  [description]
   * @return {[type]}             [description]
   */
- dbHelper.prototype.getById = function(storeName, id, callback) {
+ DbHelper.prototype.getById = function(storeName, id, callback) {
  	try {
 
  		let me = this;
@@ -320,7 +319,7 @@ import merge from 'merge'
  		if (me.localDatabase != null && me.localDatabase.db != null) {
  			store.get(id).onsuccess = function(e) {
  				if (callback) {
- 					callback(new message({
+ 					callback(new Message({
  						success: true,
  						msg: 'ok',
  						result: e.target.result
@@ -331,7 +330,7 @@ import merge from 'merge'
 
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -342,7 +341,7 @@ import merge from 'merge'
  /**
   * 新增
   */
- dbHelper.prototype.add = function(storeName, fieldArr, callback) {
+ DbHelper.prototype.add = function(storeName, fieldArr, callback) {
  	try {
  		let me = this;
  		let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
@@ -353,7 +352,7 @@ import merge from 'merge'
  				var request = store.add(obj);
  				request.onsuccess = function(e) {
  					if (callback) {
- 						callback(new message({
+ 						callback(new Message({
  							success: true,
  							msg: 'ok',
  							result: null
@@ -363,7 +362,7 @@ import merge from 'merge'
 
  				request.onerror = function(e) {
  					if (callback) {
- 						callback(new message({
+ 						callback(new Message({
  							success: false,
  							msg: e,
  							result: null
@@ -376,7 +375,7 @@ import merge from 'merge'
  		}
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -388,14 +387,14 @@ import merge from 'merge'
   * 根据Id删除 
   * @return {[type]} [description]
   */
- dbHelper.prototype.deleteById = function(storeName, id, callback) {
+ DbHelper.prototype.deleteById = function(storeName, id, callback) {
  	try {
  		let me = this;
  		if (me.localDatabase != null && me.localDatabase.db != null) {
  			var store = me.localDatabase.db.transaction(storeName, "readwrite").objectStore(storeName);
  			store.delete(id).onsuccess = function(e) {
  				if (callback) {
- 					callback(new message({
+ 					callback(new Message({
  						success: true,
  						msg: 'ok',
  						result: null
@@ -406,7 +405,7 @@ import merge from 'merge'
  		}
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -421,7 +420,7 @@ import merge from 'merge'
   * @param  {Function} callback  [description]
   * @return {[type]}             [description]
   */
- dbHelper.prototype.clear = function(storeName, callback) {
+ DbHelper.prototype.clear = function(storeName, callback) {
  	try {
 
  		if (me.localDatabase != null && me.localDatabase.db != null) {
@@ -430,7 +429,7 @@ import merge from 'merge'
  			store.clear().onsuccess = function(e) {
 
  				if (callback) {
- 					callback(new message({
+ 					callback(new Message({
  						success: true,
  						msg: `${storeName} object store cleared`,
  						result: null
@@ -441,7 +440,7 @@ import merge from 'merge'
  		}
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -453,7 +452,7 @@ import merge from 'merge'
   * 根据id修改
   * @return {[type]} [description]
   */
- dbHelper.prototype.updateById = function(storeName, id, setObj, callback) {
+ DbHelper.prototype.updateById = function(storeName, id, setObj, callback) {
  	try {
  		let me = this;
  		let transaction = me.localDatabase.db.transaction(storeName, "readwrite");
@@ -475,7 +474,7 @@ import merge from 'merge'
  					if (callback) {
  						let result = [];
  						result.push(record);
- 						callback(new message({
+ 						callback(new Message({
  							success: true,
  							msg: `${storeName} store  ${JSON.stringify(record)}  update`,
  							result: result
@@ -485,7 +484,7 @@ import merge from 'merge'
 
  				request.onerror = function(er) {
  					if (callback) {
- 						callback(new message({
+ 						callback(new Message({
  							success: false,
  							msg: er,
  							result: null
@@ -497,7 +496,7 @@ import merge from 'merge'
  		}
  	} catch (e) {
  		if (callback) {
- 			callback(new message({
+ 			callback(new Message({
  				success: false,
  				msg: e,
  				result: null
@@ -507,5 +506,5 @@ import merge from 'merge'
  };
 
 
- export {message,dbHelper}
- export default dbHelper
+ export {Message,DbHelper}
+ export default DbHelper

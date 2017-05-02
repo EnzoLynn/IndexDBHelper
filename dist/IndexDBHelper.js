@@ -49,7 +49,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.dbHelper = exports.message = undefined;
+	exports.DbHelper = exports.Message = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -59,7 +59,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var message = function message(_ref) {
+	var Message = function Message(_ref) {
 	  var success = _ref.success,
 	      msg = _ref.msg,
 	      result = _ref.result,
@@ -72,9 +72,8 @@
 	    total: total
 	  };
 	};
-	alert(11);
-	function dbHelper() {
-	  alert(22);
+
+	function DbHelper() {
 	  this.localDatabase = {};
 	  this.localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 	  this.localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
@@ -87,7 +86,7 @@
 	 * 创建/打开数据库 和表
 	 * @return {[type]} [description]
 	 */
-	dbHelper.prototype.openDatabase = function (dbName, storeName, version, callback) {
+	DbHelper.prototype.openDatabase = function (dbName, storeName, version, callback) {
 	  var me = this,
 	      vs = 1;
 	  try {
@@ -98,7 +97,7 @@
 	    var openRequest = me.localDatabase.indexedDB.open(dbName, vs);
 	    openRequest.onerror = function (e) {
 	      if (callback) {
-	        callback(new message({
+	        callback(new Message({
 	          success: false,
 	          msg: "Database error: " + e.target.errorCode,
 	          result: null
@@ -109,7 +108,7 @@
 	      me.localDatabase.db = e.target.result;
 	      //me.createObjectStore(storeName, false, false, function() {
 	      if (callback) {
-	        callback(new message({
+	        callback(new Message({
 	          success: true,
 	          msg: "createObjectStore success",
 	          result: null
@@ -117,7 +116,7 @@
 	      };
 	      //});
 	      // if (callback) {
-	      // 	callback(new message({
+	      // 	callback(new Message({
 	      // 		success: true,
 	      // 		msg: "openDatabase success",
 	      // 		result: null
@@ -130,7 +129,7 @@
 	      me.localDatabase.db = e.target.result;
 	      me.createObjectStore(storeName, false, false, function () {
 	        if (callback) {
-	          callback(new message({
+	          callback(new Message({
 	            success: true,
 	            msg: "upgradeneeded success",
 	            result: null
@@ -140,7 +139,7 @@
 	    };
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -154,13 +153,13 @@
 	 * @param  {[type]} dbName [description]
 	 * @return {[type]}        [description]
 	 */
-	dbHelper.prototype.distoryDatabase = function (dbName, callback) {
+	DbHelper.prototype.distoryDatabase = function (dbName, callback) {
 	  try {
 	    var _me = this;
 	    var deleteDbRequest = _me.localDatabase.indexedDB.deleteDatabase(dbName);
 	    deleteDbRequest.onsuccess = function (e) {
 	      if (callback) {
-	        callback(new message({
+	        callback(new Message({
 	          success: true,
 	          msg: 'Database deleted',
 	          result: null
@@ -169,7 +168,7 @@
 
 	      deleteDbRequest.onerror = function (e) {
 	        if (callback) {
-	          callback(new message({
+	          callback(new Message({
 	            success: false,
 	            msg: "Database error: " + e.target.errorCode,
 	            result: null
@@ -179,7 +178,7 @@
 	    };
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -193,7 +192,7 @@
 	 * @param  {[type]} version [description]
 	 * @return {[type]}         [description]
 	 */
-	dbHelper.prototype.createObjectStore = function (storeName, keyPath, valIndex, callback) {
+	DbHelper.prototype.createObjectStore = function (storeName, keyPath, valIndex, callback) {
 	  try {
 	    var _me2 = this;
 	    var def = {
@@ -213,7 +212,7 @@
 
 	    employeeStore.onsuccess = function (e) {
 	      if (callback) {
-	        callback(new message({
+	        callback(new Message({
 	          success: true,
 	          msg: 'ok',
 	          result: null
@@ -222,7 +221,7 @@
 	    };
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -235,7 +234,7 @@
 	 * 查找
 	 * @return {[type]} [description]
 	 */
-	dbHelper.prototype.find = function (storeName, whereObj, isFuzzy, topNum, callback) {
+	DbHelper.prototype.find = function (storeName, whereObj, isFuzzy, topNum, callback) {
 	  if (typeof whereObj === 'function') {
 	    callback = whereObj;
 	    whereObj = null;
@@ -330,7 +329,7 @@
 	            };
 	          };
 	          if (callback) {
-	            callback(new message({
+	            callback(new Message({
 	              success: true,
 	              total: result.length,
 	              msg: 'find success',
@@ -342,7 +341,7 @@
 	    }
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -357,7 +356,7 @@
 	 * @param  {Function} callback  [description]
 	 * @return {[type]}             [description]
 	 */
-	dbHelper.prototype.getById = function (storeName, id, callback) {
+	DbHelper.prototype.getById = function (storeName, id, callback) {
 	  try {
 
 	    var _me4 = this;
@@ -367,7 +366,7 @@
 	    if (_me4.localDatabase != null && _me4.localDatabase.db != null) {
 	      store.get(id).onsuccess = function (e) {
 	        if (callback) {
-	          callback(new message({
+	          callback(new Message({
 	            success: true,
 	            msg: 'ok',
 	            result: e.target.result
@@ -377,7 +376,7 @@
 	    }
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -388,7 +387,7 @@
 	/**
 	 * 新增
 	 */
-	dbHelper.prototype.add = function (storeName, fieldArr, callback) {
+	DbHelper.prototype.add = function (storeName, fieldArr, callback) {
 	  try {
 	    var _me5 = this;
 	    var transaction = _me5.localDatabase.db.transaction(storeName, "readwrite");
@@ -399,7 +398,7 @@
 	        var request = store.add(obj);
 	        request.onsuccess = function (e) {
 	          if (callback) {
-	            callback(new message({
+	            callback(new Message({
 	              success: true,
 	              msg: 'ok',
 	              result: null
@@ -409,7 +408,7 @@
 
 	        request.onerror = function (e) {
 	          if (callback) {
-	            callback(new message({
+	            callback(new Message({
 	              success: false,
 	              msg: e,
 	              result: null
@@ -420,7 +419,7 @@
 	    }
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -432,14 +431,14 @@
 	 * 根据Id删除 
 	 * @return {[type]} [description]
 	 */
-	dbHelper.prototype.deleteById = function (storeName, id, callback) {
+	DbHelper.prototype.deleteById = function (storeName, id, callback) {
 	  try {
 	    var _me6 = this;
 	    if (_me6.localDatabase != null && _me6.localDatabase.db != null) {
 	      var store = _me6.localDatabase.db.transaction(storeName, "readwrite").objectStore(storeName);
 	      store.delete(id).onsuccess = function (e) {
 	        if (callback) {
-	          callback(new message({
+	          callback(new Message({
 	            success: true,
 	            msg: 'ok',
 	            result: null
@@ -449,7 +448,7 @@
 	    }
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -463,7 +462,7 @@
 	 * @param  {Function} callback  [description]
 	 * @return {[type]}             [description]
 	 */
-	dbHelper.prototype.clear = function (storeName, callback) {
+	DbHelper.prototype.clear = function (storeName, callback) {
 	  try {
 
 	    if (me.localDatabase != null && me.localDatabase.db != null) {
@@ -472,7 +471,7 @@
 	      store.clear().onsuccess = function (e) {
 
 	        if (callback) {
-	          callback(new message({
+	          callback(new Message({
 	            success: true,
 	            msg: storeName + " object store cleared",
 	            result: null
@@ -482,7 +481,7 @@
 	    }
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -494,7 +493,7 @@
 	 * 根据id修改
 	 * @return {[type]} [description]
 	 */
-	dbHelper.prototype.updateById = function (storeName, id, setObj, callback) {
+	DbHelper.prototype.updateById = function (storeName, id, setObj, callback) {
 	  try {
 	    var _me7 = this;
 	    var transaction = _me7.localDatabase.db.transaction(storeName, "readwrite");
@@ -516,7 +515,7 @@
 	          if (callback) {
 	            var result = [];
 	            result.push(record);
-	            callback(new message({
+	            callback(new Message({
 	              success: true,
 	              msg: storeName + " store  " + JSON.stringify(record) + "  update",
 	              result: result
@@ -526,7 +525,7 @@
 
 	        request.onerror = function (er) {
 	          if (callback) {
-	            callback(new message({
+	            callback(new Message({
 	              success: false,
 	              msg: er,
 	              result: null
@@ -537,7 +536,7 @@
 	    }
 	  } catch (e) {
 	    if (callback) {
-	      callback(new message({
+	      callback(new Message({
 	        success: false,
 	        msg: e,
 	        result: null
@@ -546,9 +545,9 @@
 	  }
 	};
 
-	exports.message = message;
-	exports.dbHelper = dbHelper;
-	exports.default = dbHelper;
+	exports.Message = Message;
+	exports.DbHelper = DbHelper;
+	exports.default = DbHelper;
 
 /***/ }),
 /* 1 */
