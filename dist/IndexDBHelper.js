@@ -53,6 +53,8 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+	exports.ddd = ddd;
+
 	var _merge = __webpack_require__(1);
 
 	var _merge2 = _interopRequireDefault(_merge);
@@ -546,6 +548,9 @@
 	};
 
 	exports.DbHelper = DbHelper;
+	function ddd() {
+	  alert(ddd);
+	}
 	exports.default = DbHelper;
 
 /***/ }),
