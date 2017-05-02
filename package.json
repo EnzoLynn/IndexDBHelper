@@ -7,5 +7,8 @@
     "name": "EnzoLynn",
     "email": "6710582@qq.com"
   },
-  "main": "dist/IndexDBHelper.js"
+  "main": "dist/IndexDBHelper.js",
+  "dependencies": {
+  	"merge": "^1.2.0",
+  }
 }
