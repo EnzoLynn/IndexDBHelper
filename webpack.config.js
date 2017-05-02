@@ -4,7 +4,7 @@ var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 // var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     entry: {
-        'IndexDBHelper': './src/IndexDBHelper.js',
+        'IndexDBHelper': './dist/IndexDBHelper.js',
         // 'test': './src/test.js'
     },
     output: {
