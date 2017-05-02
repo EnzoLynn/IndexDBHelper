@@ -3,7 +3,7 @@
 ```javascript
 
 
-var IndexDBHelper = require('js/IndexDBHelper.js');
+var IndexDBHelper = require('IndexDBHelper');
 dbHelper = new IndexDBHelper(); 
  
 dbHelper.openDatabase('test', 'table1', false, function(omes) {
