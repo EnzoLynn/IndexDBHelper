@@ -1,6 +1,6 @@
  
 import merge from 'merge' 
- let message = function({
+ var message = function({
  	success,
  	msg,
  	result,
@@ -506,5 +506,5 @@ import merge from 'merge'
  };
 
 
-
+ export {messgae}
  export default dbHelper
