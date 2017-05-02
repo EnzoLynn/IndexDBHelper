@@ -506,5 +506,5 @@ import merge from 'merge'
  };
 
 
- export {message}
+ export {message,dbHelper}
  export default dbHelper
