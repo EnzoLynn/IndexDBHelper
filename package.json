@@ -1,0 +1,16 @@
+{
+  "name": "IndexDBHelper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SlpMPlus (redux)",
+  "author": {
+    "name": "EnzoLynn",
+    "email": "6710582@qq.com"
+  },
+  "dependencies": {
+    
+  },
+  "devDependencies": {
+     
+  }
+}
