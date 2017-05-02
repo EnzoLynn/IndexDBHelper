@@ -506,8 +506,6 @@ import merge from 'merge'
  };
 
 
- export {DbHelper as DbHelper}
- export function ddd(){
-   alert(ddd)
- }
+ export {DbHelper,Message}
+
  export default DbHelper
