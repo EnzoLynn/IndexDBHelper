@@ -13,8 +13,8 @@ import merge from 'merge'
  		total
  	};
  };
- var dbHelper = function() {
-
+ var dbHelper = function dbHelper() {
+ 
  	this.localDatabase = {};
  	this.localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
  	this.localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;

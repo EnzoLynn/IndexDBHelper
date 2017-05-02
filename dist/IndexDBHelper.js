@@ -1,1 +1,750 @@
-!function(e){function t(a){if(n[a])return n[a].exports;var s=n[a]={exports:{},id:a,loaded:!1};return e[a].call(s.exports,s,s.exports,t),s.loaded=!0,s.exports}var n={};return t.m=e,t.c=n,t.p="",t(0)}([function(e,t,n){"use strict";function a(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0}),t.dbHelper=t.message=void 0;var s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},r=n(1),o=a(r),c=function(e){var t=e.success,n=e.msg,a=e.result,s=e.total;return{success:t,msg:n,result:a,total:s}},l=function(){this.localDatabase={},this.localDatabase.indexedDB=window.indexedDB||window.mozIndexedDB||window.webkitIndexedDB||window.msIndexedDB,this.localDatabase.IDBKeyRange=window.IDBKeyRange||window.webkitIDBKeyRange,this.localDatabase.IDBTransaction=window.IDBTransaction||window.webkitIDBTransaction,this.localDatabase.indexedDB.onerror=function(e){alert("Database error: "+e.target.errorCode)}};l.prototype.openDatabase=function(e,t,n,a){var s=this,r=1;try{n&&(r=n);var o=s.localDatabase.indexedDB.open(e,r);o.onerror=function(e){a&&a(new c({success:!1,msg:"Database error: "+e.target.errorCode,result:null}))},o.onsuccess=function(e){s.localDatabase.db=e.target.result,a&&a(new c({success:!0,msg:"createObjectStore success",result:null}))},o.onupgradeneeded=function(e){s.localDatabase.db=e.target.result,s.createObjectStore(t,!1,!1,function(){a&&a(new c({success:!0,msg:"upgradeneeded success",result:null}))})}}catch(e){a&&a(new c({success:!1,msg:e,result:null}))}},l.prototype.distoryDatabase=function(e,t){try{var n=this,a=n.localDatabase.indexedDB.deleteDatabase(e);a.onsuccess=function(e){t&&t(new c({success:!0,msg:"Database deleted",result:null})),a.onerror=function(e){t&&t(new c({success:!1,msg:"Database error: "+e.target.errorCode,result:null}))}}}catch(e){t&&t(new c({success:!1,msg:e,result:null}))}},l.prototype.createObjectStore=function(e,t,n,a){try{var s=this,r={keyPath:"id",autoIncrement:!0},l=(0,o.default)(r,t||{}),u=s.localDatabase.db.createObjectStore(e,l);if(n)for(var i=0;i<n.length;i++){var f=n[i];u.createIndex(f.name,f.feild,{unique:f.unique})}u.onsuccess=function(e){a&&a(new c({success:!0,msg:"ok",result:null}))}}catch(e){a&&a(new c({success:!1,msg:e,result:null}))}},l.prototype.find=function(e,t,n,a,r){"function"==typeof t?(r=t,t=null,n=null,a=null):"function"==typeof n?(r=n,n=null,a=null):"function"==typeof a&&(r=a,a=null);try{var o=this,l=o.localDatabase.db.transaction(e,"readwrite"),u=l.objectStore(e);if(null!=o.localDatabase&&null!=o.localDatabase.db){var u=o.localDatabase.db.transaction(e).objectStore(e),i=u.openCursor(),f=[],d=[];i.onsuccess=function(e){var o=e.target.result;if(o){var l=o.value;f.push(l),o.continue()}else{if(t)for(var u=0;u<f.length;u++)for(var i in t){var b=f[u][i];if("object"==s(t[i])){var p=t[i];if("date"==p.type){var g=new Date(p.value),w=new Date(b);if(!(w>=g)){delete f[u];break}}else if(n){if(b.indexOf(t[i])==-1){delete f[u];break}}else if(t[i]!=b){delete f[u];break}}else if(n){if(b.indexOf(t[i])==-1){delete f[u];break}}else if(t[i]!=b){delete f[u];break}}for(var D=0;D<f.length;D++)f[D]&&d.push(f[D]);a&&d.length>a&&d.splice(a-1,d.length-a),r&&r(new c({success:!0,total:f.length,msg:"find success",result:f}))}}}}catch(e){r&&r(new c({success:!1,msg:e,result:null}))}},l.prototype.getById=function(e,t,n){try{var a=this,s=a.localDatabase.db.transaction(e,"readwrite"),r=s.objectStore(e);null!=a.localDatabase&&null!=a.localDatabase.db&&(r.get(t).onsuccess=function(e){n&&n(new c({success:!0,msg:"ok",result:e.target.result}))})}catch(e){n&&n(new c({success:!1,msg:e,result:null}))}},l.prototype.add=function(e,t,n){try{var a=this,s=a.localDatabase.db.transaction(e,"readwrite"),r=s.objectStore(e);if(null!=a.localDatabase&&null!=a.localDatabase.db)for(var o=0;o<t.length;o++){var l=t[o],u=r.add(l);u.onsuccess=function(e){n&&n(new c({success:!0,msg:"ok",result:null}))},u.onerror=function(e){n&&n(new c({success:!1,msg:e,result:null}))}}}catch(e){n&&n(new c({success:!1,msg:e,result:null}))}},l.prototype.deleteById=function(e,t,n){try{var a=this;if(null!=a.localDatabase&&null!=a.localDatabase.db){var s=a.localDatabase.db.transaction(e,"readwrite").objectStore(e);s.delete(t).onsuccess=function(e){n&&n(new c({success:!0,msg:"ok",result:null}))}}}catch(e){n&&n(new c({success:!1,msg:e,result:null}))}},l.prototype.clear=function(e,t){try{if(null!=me.localDatabase&&null!=me.localDatabase.db){var n=me.localDatabase.db.transaction(e,"readwrite").objectStore(e);n.clear().onsuccess=function(n){t&&t(new c({success:!0,msg:e+" object store cleared",result:null}))}}}catch(e){t&&t(new c({success:!1,msg:e,result:null}))}},l.prototype.updateById=function(e,t,n,a){try{var s=this,r=s.localDatabase.db.transaction(e,"readwrite"),o=r.objectStore(e),l=void 0;null!=s.localDatabase&&null!=s.localDatabase.db&&(o.get(t).onsuccess=function(t){l=t.target.result;for(var s in n)(l[s]||""==l[s])&&(l[s]=n[s]);var r=o.put(l);r.onsuccess=function(t){if(a){var n=[];n.push(l),a(new c({success:!0,msg:e+" store  "+JSON.stringify(l)+"  update",result:n}))}},r.onerror=function(e){a&&a(new c({success:!1,msg:e,result:null}))}})}catch(e){a&&a(new c({success:!1,msg:e,result:null}))}},t.message=c,t.dbHelper=l,t.default=l},function(e,t,n){(function(e){!function(t){function n(e,t){if("object"!==s(e))return t;for(var a in t)"object"===s(e[a])&&"object"===s(t[a])?e[a]=n(e[a],t[a]):e[a]=t[a];return e}function a(e,t,a){var o=a[0],c=a.length;(e||"object"!==s(o))&&(o={});for(var l=0;l<c;++l){var u=a[l],i=s(u);if("object"===i)for(var f in u){var d=e?r.clone(u[f]):u[f];t?o[f]=n(o[f],d):o[f]=d}}return o}function s(e){return{}.toString.call(e).slice(8,-1).toLowerCase()}var r=function(e){return a(e===!0,!1,arguments)},o="merge";r.recursive=function(e){return a(e===!0,!0,arguments)},r.clone=function(e){var t,n,a=e,o=s(e);if("array"===o)for(a=[],n=e.length,t=0;t<n;++t)a[t]=r.clone(e[t]);else if("object"===o){a={};for(t in e)a[t]=r.clone(e[t])}return a},t?e.exports=r:window[o]=r}("object"==typeof e&&e&&"object"==typeof e.exports&&e.exports)}).call(t,n(2)(e))},function(e,t){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},e.paths=[],e.children=[],e.webpackPolyfill=1),e}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.dbHelper = exports.message = undefined;
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _merge = __webpack_require__(1);
+
+	var _merge2 = _interopRequireDefault(_merge);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var message = function message(_ref) {
+	  var success = _ref.success,
+	      msg = _ref.msg,
+	      result = _ref.result,
+	      total = _ref.total;
+
+	  return {
+	    success: success,
+	    msg: msg,
+	    result: result,
+	    total: total
+	  };
+	};
+	var dbHelper = function dbHelper() {
+
+	  this.localDatabase = {};
+	  this.localDatabase.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+	  this.localDatabase.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+	  this.localDatabase.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+	  this.localDatabase.indexedDB.onerror = function (e) {
+	    alert("Database error: " + e.target.errorCode);
+	  };
+	};
+	/**
+	 * 创建/打开数据库 和表
+	 * @return {[type]} [description]
+	 */
+	dbHelper.prototype.openDatabase = function (dbName, storeName, version, callback) {
+	  var me = this,
+	      vs = 1;
+	  try {
+
+	    if (version) {
+	      vs = version;
+	    };
+	    var openRequest = me.localDatabase.indexedDB.open(dbName, vs);
+	    openRequest.onerror = function (e) {
+	      if (callback) {
+	        callback(new message({
+	          success: false,
+	          msg: "Database error: " + e.target.errorCode,
+	          result: null
+	        }));
+	      };
+	    };
+	    openRequest.onsuccess = function (e) {
+	      me.localDatabase.db = e.target.result;
+	      //me.createObjectStore(storeName, false, false, function() {
+	      if (callback) {
+	        callback(new message({
+	          success: true,
+	          msg: "createObjectStore success",
+	          result: null
+	        }));
+	      };
+	      //});
+	      // if (callback) {
+	      // 	callback(new message({
+	      // 		success: true,
+	      // 		msg: "openDatabase success",
+	      // 		result: null
+	      // 	}));
+	      // };
+	    };
+	    openRequest.onupgradeneeded = function (e) {
+	      //alert('open upgrade');
+
+	      me.localDatabase.db = e.target.result;
+	      me.createObjectStore(storeName, false, false, function () {
+	        if (callback) {
+	          callback(new message({
+	            success: true,
+	            msg: "upgradeneeded success",
+	            result: null
+	          }));
+	        };
+	      });
+	    };
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    };
+	  }
+	};
+
+	/**
+	 * 删除数据库
+	 * @param  {[type]} dbName [description]
+	 * @return {[type]}        [description]
+	 */
+	dbHelper.prototype.distoryDatabase = function (dbName, callback) {
+	  try {
+	    var _me = this;
+	    var deleteDbRequest = _me.localDatabase.indexedDB.deleteDatabase(dbName);
+	    deleteDbRequest.onsuccess = function (e) {
+	      if (callback) {
+	        callback(new message({
+	          success: true,
+	          msg: 'Database deleted',
+	          result: null
+	        }));
+	      };
+
+	      deleteDbRequest.onerror = function (e) {
+	        if (callback) {
+	          callback(new message({
+	            success: false,
+	            msg: "Database error: " + e.target.errorCode,
+	            result: null
+	          }));
+	        };
+	      };
+	    };
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    };
+	  }
+	};
+	/**
+	 * 创建表
+	 * @param  {[type]} dbName  [description]
+	 * @param  {[type]} version [description]
+	 * @return {[type]}         [description]
+	 */
+	dbHelper.prototype.createObjectStore = function (storeName, keyPath, valIndex, callback) {
+	  try {
+	    var _me2 = this;
+	    var def = {
+	      keyPath: "id",
+	      autoIncrement: true
+	    };
+	    var kp = (0, _merge2.default)(def, keyPath || {});
+	    var employeeStore = _me2.localDatabase.db.createObjectStore(storeName, kp);
+	    if (valIndex) {
+	      for (var i = 0; i < valIndex.length; i++) {
+	        var index = valIndex[i];
+	        employeeStore.createIndex(index.name, index.feild, {
+	          unique: index.unique
+	        });
+	      };
+	    };
+
+	    employeeStore.onsuccess = function (e) {
+	      if (callback) {
+	        callback(new message({
+	          success: true,
+	          msg: 'ok',
+	          result: null
+	        }));
+	      };
+	    };
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    };
+	  }
+	};
+
+	/**
+	 * 查找
+	 * @return {[type]} [description]
+	 */
+	dbHelper.prototype.find = function (storeName, whereObj, isFuzzy, topNum, callback) {
+	  if (typeof whereObj === 'function') {
+	    callback = whereObj;
+	    whereObj = null;
+	    isFuzzy = null;
+	    topNum = null;
+	  } else if (typeof isFuzzy === 'function') {
+	    callback = isFuzzy;
+	    isFuzzy = null;
+	    topNum = null;
+	  } else if (typeof topNum === 'function') {
+	    callback = topNum;
+	    topNum = null;
+	  }
+	  try {
+
+	    var _me3 = this;
+	    var transaction = _me3.localDatabase.db.transaction(storeName, "readwrite");
+	    var _store = transaction.objectStore(storeName);
+
+	    if (_me3.localDatabase != null && _me3.localDatabase.db != null) {
+	      var _store = _me3.localDatabase.db.transaction(storeName).objectStore(storeName);
+
+	      var request = _store.openCursor();
+	      var result = [],
+	          res = [];
+	      request.onsuccess = function (e) {
+	        var cursor = e.target.result;
+
+	        if (cursor) {
+	          var data = cursor.value;
+	          result.push(data);
+	          cursor.continue();
+	        } else {
+	          // var jsonStr = JSON.stringify(employee);
+	          //var indexes = [];
+	          if (whereObj) {
+	            for (var i = 0; i < result.length; i++) {
+	              for (var key in whereObj) {
+
+	                var value = result[i][key];
+	                //判断whereObj[key]是否默认类型
+	                if (_typeof(whereObj[key]) == 'object') {
+	                  var obj = whereObj[key];
+	                  if (obj.type == 'date') {
+	                    var val1 = new Date(obj.value);
+	                    var val2 = new Date(value);
+
+	                    if (!(val2 >= val1)) {
+	                      delete result[i];
+	                      break;
+	                    }
+	                  } else {
+	                    //默认string 
+	                    //是否模糊查询
+	                    if (isFuzzy) {
+	                      if (value.indexOf(whereObj[key]) == -1) {
+	                        delete result[i];
+	                        break;
+	                      };
+	                    } else {
+	                      if (whereObj[key] != value) {
+	                        delete result[i];
+	                        break;
+	                      };
+	                    }
+	                  }
+	                } else {
+	                  //是否模糊查询
+	                  if (isFuzzy) {
+	                    if (value.indexOf(whereObj[key]) == -1) {
+	                      delete result[i];
+	                      break;
+	                    };
+	                  } else {
+	                    if (whereObj[key] != value) {
+	                      delete result[i];
+	                      break;
+	                    };
+	                  }
+	                }
+	              }
+	            };
+	          }
+	          for (var _i = 0; _i < result.length; _i++) {
+	            if (result[_i]) {
+	              res.push(result[_i]);
+	            };
+	          };
+	          if (topNum) {
+	            if (res.length > topNum) {
+	              res.splice(topNum - 1, res.length - topNum);
+	            };
+	          };
+	          if (callback) {
+	            callback(new message({
+	              success: true,
+	              total: result.length,
+	              msg: 'find success',
+	              result: result
+	            }));
+	          };
+	        }
+	      };
+	    }
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    };
+	  }
+	};
+	/**
+	 * 根据id获取数据
+	 * @param  {[type]}   storeName [description]
+	 * @param  {[type]}   id        [description]
+	 * @param  {Function} callback  [description]
+	 * @return {[type]}             [description]
+	 */
+	dbHelper.prototype.getById = function (storeName, id, callback) {
+	  try {
+
+	    var _me4 = this;
+	    var transaction = _me4.localDatabase.db.transaction(storeName, "readwrite");
+	    var store = transaction.objectStore(storeName);
+
+	    if (_me4.localDatabase != null && _me4.localDatabase.db != null) {
+	      store.get(id).onsuccess = function (e) {
+	        if (callback) {
+	          callback(new message({
+	            success: true,
+	            msg: 'ok',
+	            result: e.target.result
+	          }));
+	        }
+	      };
+	    }
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    }
+	  }
+	};
+	/**
+	 * 新增
+	 */
+	dbHelper.prototype.add = function (storeName, fieldArr, callback) {
+	  try {
+	    var _me5 = this;
+	    var transaction = _me5.localDatabase.db.transaction(storeName, "readwrite");
+	    var store = transaction.objectStore(storeName);
+	    if (_me5.localDatabase != null && _me5.localDatabase.db != null) {
+	      for (var i = 0; i < fieldArr.length; i++) {
+	        var obj = fieldArr[i];
+	        var request = store.add(obj);
+	        request.onsuccess = function (e) {
+	          if (callback) {
+	            callback(new message({
+	              success: true,
+	              msg: 'ok',
+	              result: null
+	            }));
+	          }
+	        };
+
+	        request.onerror = function (e) {
+	          if (callback) {
+	            callback(new message({
+	              success: false,
+	              msg: e,
+	              result: null
+	            }));
+	          }
+	        };
+	      };
+	    }
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    }
+	  }
+	};
+	/**
+	 * 根据Id删除 
+	 * @return {[type]} [description]
+	 */
+	dbHelper.prototype.deleteById = function (storeName, id, callback) {
+	  try {
+	    var _me6 = this;
+	    if (_me6.localDatabase != null && _me6.localDatabase.db != null) {
+	      var store = _me6.localDatabase.db.transaction(storeName, "readwrite").objectStore(storeName);
+	      store.delete(id).onsuccess = function (e) {
+	        if (callback) {
+	          callback(new message({
+	            success: true,
+	            msg: 'ok',
+	            result: null
+	          }));
+	        }
+	      };
+	    }
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    }
+	  }
+	};
+	/**
+	 * 清空Store
+	 * @param  {[type]}   storeName [description]
+	 * @param  {Function} callback  [description]
+	 * @return {[type]}             [description]
+	 */
+	dbHelper.prototype.clear = function (storeName, callback) {
+	  try {
+
+	    if (me.localDatabase != null && me.localDatabase.db != null) {
+	      var store = me.localDatabase.db.transaction(storeName, "readwrite").objectStore(storeName);
+
+	      store.clear().onsuccess = function (e) {
+
+	        if (callback) {
+	          callback(new message({
+	            success: true,
+	            msg: storeName + " object store cleared",
+	            result: null
+	          }));
+	        }
+	      };
+	    }
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    }
+	  }
+	};
+	/**
+	 * 根据id修改
+	 * @return {[type]} [description]
+	 */
+	dbHelper.prototype.updateById = function (storeName, id, setObj, callback) {
+	  try {
+	    var _me7 = this;
+	    var transaction = _me7.localDatabase.db.transaction(storeName, "readwrite");
+	    var store = transaction.objectStore(storeName);
+
+	    var record = void 0;
+	    if (_me7.localDatabase != null && _me7.localDatabase.db != null) {
+	      store.get(id).onsuccess = function (e) {
+	        record = e.target.result;
+	        for (var key in setObj) {
+	          if (record[key] || record[key] == "") {
+	            record[key] = setObj[key];
+	          };
+	        }
+
+	        var request = store.put(record);
+
+	        request.onsuccess = function (es) {
+	          if (callback) {
+	            var result = [];
+	            result.push(record);
+	            callback(new message({
+	              success: true,
+	              msg: storeName + " store  " + JSON.stringify(record) + "  update",
+	              result: result
+	            }));
+	          }
+	        };
+
+	        request.onerror = function (er) {
+	          if (callback) {
+	            callback(new message({
+	              success: false,
+	              msg: er,
+	              result: null
+	            }));
+	          }
+	        };
+	      }; // fetch   first time
+	    }
+	  } catch (e) {
+	    if (callback) {
+	      callback(new message({
+	        success: false,
+	        msg: e,
+	        result: null
+	      }));
+	    }
+	  }
+	};
+
+	exports.message = message;
+	exports.dbHelper = dbHelper;
+	exports.default = dbHelper;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/*!
+	 * @name JavaScript/NodeJS Merge v1.2.0
+	 * @author yeikos
+	 * @repository https://github.com/yeikos/js.merge
+
+	 * Copyright 2014 yeikos - MIT license
+	 * https://raw.github.com/yeikos/js.merge/master/LICENSE
+	 */
+
+	;(function(isNode) {
+
+		/**
+		 * Merge one or more objects 
+		 * @param bool? clone
+		 * @param mixed,... arguments
+		 * @return object
+		 */
+
+		var Public = function(clone) {
+
+			return merge(clone === true, false, arguments);
+
+		}, publicName = 'merge';
+
+		/**
+		 * Merge two or more objects recursively 
+		 * @param bool? clone
+		 * @param mixed,... arguments
+		 * @return object
+		 */
+
+		Public.recursive = function(clone) {
+
+			return merge(clone === true, true, arguments);
+
+		};
+
+		/**
+		 * Clone the input removing any reference
+		 * @param mixed input
+		 * @return mixed
+		 */
+
+		Public.clone = function(input) {
+
+			var output = input,
+				type = typeOf(input),
+				index, size;
+
+			if (type === 'array') {
+
+				output = [];
+				size = input.length;
+
+				for (index=0;index<size;++index)
+
+					output[index] = Public.clone(input[index]);
+
+			} else if (type === 'object') {
+
+				output = {};
+
+				for (index in input)
+
+					output[index] = Public.clone(input[index]);
+
+			}
+
+			return output;
+
+		};
+
+		/**
+		 * Merge two objects recursively
+		 * @param mixed input
+		 * @param mixed extend
+		 * @return mixed
+		 */
+
+		function merge_recursive(base, extend) {
+
+			if (typeOf(base) !== 'object')
+
+				return extend;
+
+			for (var key in extend) {
+
+				if (typeOf(base[key]) === 'object' && typeOf(extend[key]) === 'object') {
+
+					base[key] = merge_recursive(base[key], extend[key]);
+
+				} else {
+
+					base[key] = extend[key];
+
+				}
+
+			}
+
+			return base;
+
+		}
+
+		/**
+		 * Merge two or more objects
+		 * @param bool clone
+		 * @param bool recursive
+		 * @param array argv
+		 * @return object
+		 */
+
+		function merge(clone, recursive, argv) {
+
+			var result = argv[0],
+				size = argv.length;
+
+			if (clone || typeOf(result) !== 'object')
+
+				result = {};
+
+			for (var index=0;index<size;++index) {
+
+				var item = argv[index],
+
+					type = typeOf(item);
+
+				if (type !== 'object') continue;
+
+				for (var key in item) {
+
+					var sitem = clone ? Public.clone(item[key]) : item[key];
+
+					if (recursive) {
+
+						result[key] = merge_recursive(result[key], sitem);
+
+					} else {
+
+						result[key] = sitem;
+
+					}
+
+				}
+
+			}
+
+			return result;
+
+		}
+
+		/**
+		 * Get type of variable
+		 * @param mixed input
+		 * @return string
+		 *
+		 * @see http://jsperf.com/typeofvar
+		 */
+
+		function typeOf(input) {
+
+			return ({}).toString.call(input).slice(8, -1).toLowerCase();
+
+		}
+
+		if (isNode) {
+
+			module.exports = Public;
+
+		} else {
+
+			window[publicName] = Public;
+
+		}
+
+	})(typeof module === 'object' && module && typeof module.exports === 'object' && module.exports);
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ })
+/******/ ]);
