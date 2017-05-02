@@ -6,6 +6,6 @@
   "author": {
     "name": "EnzoLynn",
     "email": "6710582@qq.com"
-  } 
+  },
   "main": "dist/IndexDBHelper.js",
 }
