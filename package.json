@@ -7,6 +7,10 @@
     "name": "EnzoLynn",
     "email": "6710582@qq.com"
   },
+   "repository": {
+    "type": "git",
+    "url": "tps://git@github.com/EnzoLynn/IndexDBHelper.git"
+  },
   "main": "src/IndexDBHelper.js",
   "dependencies": { 
     "babel-core": "^6.17.0",
@@ -23,18 +27,9 @@
     "less-loader": "^2.2.3",
     "merge": "^1.2.0",  
     "redux": "^3.6.0", 
-    "resolve-url-loader": "^1.6.0",
-    "sass-loader": "^4.0.2",
+    "resolve-url-loader": "^1.6.0", 
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2" 
-  },
-  "devDependencies": {
-    "exports-loader": "^0.6.3",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.9.0",
-    "imports-loader": "^0.6.5",  
-    "less-loader": "^2.2.3",
-    "url-loader": "^0.5.7"
-  }
+  } 
 }

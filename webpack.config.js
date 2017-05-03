@@ -4,12 +4,15 @@ var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 // var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     entry: {
-        'IndexDBHelper': './dist/IndexDBHelper.js',
+        'IndexDBHelper': './src/IndexDBHelper.js',
         // 'test': './src/test.js'
     },
     output: {
         path: __dirname + '/dist',
-        filename: '[name].js'
+        filename: '[name].js',
+        library: 'IndexDBHelper',
+        libraryTarget: 'umd',
+        umdNameDefine: true
     },
     module: {
         loaders: [{
@@ -40,19 +43,19 @@ module.exports = {
             }
         }),
         // new CopyWebpackPlugin([
-          
+
         //     // // {output}/to/file.txt 
         //     // { from: 'from/file.txt', to: 'to/file.txt' },
-            
+
         //     // // {output}/to/directory/file.txt 
         //     // { from: 'from/file.txt', to: 'to/directory' },
- 
+
         //     // // Copy directory contents to {output}/ 
         //     // { from: 'from/directory' },
-            
+
         //     // // Copy directory contents to {output}/to/directory/ 
         //     // { from: 'from/directory', to: 'to/directory' },
-            
+
         //     // Copy glob results to /absolute/path/ 
         //     // { from: 'bundle/**/*', to: 'E:/publicJsCore/reactExample' },
         //     // { from: 'css/**/*', to: 'E:/publicJsCore/reactExample' },
@@ -60,9 +63,9 @@ module.exports = {
         //     // { from: 'images/**/*', to: 'E:/publicJsCore/reactExample' },
         //     // { from: '*.*', to: 'E:/publicJsCore/reactExample' },
         //     // { from: 'src/**/*', to: 'E:/publicJsCore/reactExample' }
- 
-          
-           
+
+
+
         // ]),
         //  new uglifyJsPlugin({
         //      output: {

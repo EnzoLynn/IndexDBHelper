@@ -1,5 +1,5 @@
  
- var merge = require('./merge.js') 
+import merge from 'merge'
  var Message = function({
   success,
   msg,
@@ -505,8 +505,11 @@
   }
  };
 
- 
- module.exports = {
-   DbHelper:DbHelper,
-   Message:Message
- }
+export {
+  DbHelper,Message
+} 
+export default DbHelper
+ // module.exports = {
+ //   DbHelper:DbHelper,
+ //   Message:Message
+ // }
