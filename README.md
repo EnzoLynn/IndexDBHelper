@@ -1,7 +1,7 @@
 # IndexDBHelper
-
-```javascript
 npm install git+https://git@github.com/EnzoLynn/IndexDBHelper.git --save
+```javascript
+
 
 import IndexDBHelper,{Message,DbHelper} from 'IndexDBHelper'
 const dbHelper = new IndexDBHelper(); 
