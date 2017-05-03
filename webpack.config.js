@@ -67,14 +67,14 @@ module.exports = {
 
 
         // ]),
-        //  new uglifyJsPlugin({
-        //      output: {
-        //         comments: false, // remove all comments
-        //     },
-        //     compress: {
-        //         warnings: false
-        //     }
-        // }),
+         new uglifyJsPlugin({
+             output: {
+                comments: false, // remove all comments
+            },
+            compress: {
+                warnings: false
+            }
+        }),
         // new CommonsChunkPlugin(({
         //     name: "common.js",
         //     // (the commons chunk name)
