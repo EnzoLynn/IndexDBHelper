@@ -1,10 +1,10 @@
 # IndexDBHelper
 
 ```javascript
+npm install git+https://git@github.com/EnzoLynn/IndexDBHelper.git --save
 
-
-var IndexDBHelper = require('IndexDBHelper');
-dbHelper = new IndexDBHelper(); 
+import IndexDBHelper,{Message,DbHelper} from 'IndexDBHelper'
+const dbHelper = new IndexDBHelper(); 
  
 dbHelper.openDatabase('test', 'table1', false, function(omes) {
 			if (omes.success) { 
