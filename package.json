@@ -9,7 +9,7 @@
   },
    "repository": {
     "type": "git",
-    "url": "tps://git@github.com/EnzoLynn/IndexDBHelper.git"
+    "url": "https://git@github.com/EnzoLynn/IndexDBHelper.git"
   },
   "main": "dist/IndexDBHelper.js",
   "dependencies": { 
